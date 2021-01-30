@@ -1,7 +1,7 @@
 import "../style/style.scss";
 
-import createMap from "./createMap";
+import state from "./state";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const map = createMap();
+  state.init();
 });
