@@ -1,6 +1,8 @@
 # COVID-19 Map
 https://covid-map.yahyasohail.com/
 
+https://www.youtube.com/watch?v=VuXRImUrCFM
+
 This is choropleth map of COVID-19 cases and deaths around the continental US. COVID-19 statistics are presented by county. The date can be set by the user to see the number of cases and deaths at any point in time.
 
 ## Development/Build instructions
