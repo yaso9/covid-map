@@ -42,12 +42,10 @@ export default {
   },
   pushLoad() {
     this.loads += 1;
-    console.log(this.loads);
     this.loadingOverlayEl.style.display = "flex";
   },
   popLoad() {
     this.loads = Math.max(0, this.loads - 1);
-    console.log(this.loads);
     if (this.loads == 0) {
       this.loadingOverlayEl.style.display = "none";
     }
