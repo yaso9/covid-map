@@ -19,7 +19,7 @@ const colors = [
 
 export default {
   getThresholds() {
-    if (state.showDeaths) return [10000, 5000, 1000, 500, 100, 50, 10];
+    if (state.showDeaths) return [5000, 1000, 500, 100, 50, 10, 5];
     else return [100000, 50000, 10000, 5000, 1000, 500, 100];
   },
   getColor(pop) {
@@ -52,7 +52,15 @@ export default {
     };
   },
   createMap() {
-    this.map = L.map("map").setView([37.09024, -95.712891], 5);
+    this.map = L.map("map")
+      .setMaxBounds(
+        L.latLngBounds(
+          L.latLng(49.3457868, -124.7844079),
+          L.latLng(24.7433195, -66.9513812)
+        )
+      )
+      .setMinZoom(5)
+      .setView([37.09024, -95.712891], 5);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',

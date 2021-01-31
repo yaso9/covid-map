@@ -27,11 +27,13 @@
     }
 
     #datePicker {
-        margin-top: 10px;
+        margin: 10px 0 auto 0;
         font-size: 20px;
         width: 175px;
         text-align: center;
         outline: none;
+        position: relative;
+        left: calc(50% - 175px / 2);
     }
 }
 
