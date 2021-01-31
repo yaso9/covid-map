@@ -11,11 +11,36 @@
 
 #mapControls {
     width: 300px;
-    background-color: #e5e5e5;
+    background-color: rgba(255, 255, 255, 0.6);
     position: fixed;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 20px;
     z-index: 1000;
     padding: 15px;
     border-radius: 5px;
+}
+
+#mapScale {
+    background-color: rgba(255, 255, 255, 0.6);
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+
+    .singleScale {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .color {
+            margin-left: 20px;
+            width: 35px;
+            height: 35px;
+        }
+    }
 }

@@ -25,19 +25,19 @@ export default {
   getColor(pop) {
     const thresholds = this.getThresholds();
 
-    return pop > thresholds[0]
+    return pop >= thresholds[0]
       ? colors[7]
-      : pop > thresholds[1]
+      : pop >= thresholds[1]
       ? colors[6]
-      : pop > thresholds[2]
+      : pop >= thresholds[2]
       ? colors[5]
-      : pop > thresholds[3]
+      : pop >= thresholds[3]
       ? colors[4]
-      : pop > thresholds[4]
+      : pop >= thresholds[4]
       ? colors[3]
-      : pop > thresholds[5]
+      : pop >= thresholds[5]
       ? colors[2]
-      : pop > thresholds[6]
+      : pop >= thresholds[6]
       ? colors[1]
       : colors[0];
   },
@@ -58,6 +58,8 @@ export default {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
 
+    this.mapScale = document.getElementById("mapScale");
+    this.updateScale();
     this.updateData();
   },
   async updateData() {
@@ -105,6 +107,28 @@ export default {
         feature.properties.FIPS,
         this.calculateStyle.bind(this)
       );
+    }
+    this.updateScale();
+  },
+  updateScale() {
+    this.mapScale.innerHTML = "";
+    this.thresholds = [...this.getThresholds(), 0].reverse();
+
+    for (const idx in colors) {
+      const singleScaleEl = document.createElement("div");
+      singleScaleEl.className = "singleScale";
+
+      const numberEl = document.createElement("div");
+      numberEl.className = "number";
+      numberEl.innerText = this.thresholds[idx] || 0;
+      singleScaleEl.appendChild(numberEl);
+
+      const colorSwatchEl = document.createElement("div");
+      colorSwatchEl.className = "color";
+      colorSwatchEl.style.backgroundColor = colors[idx];
+      singleScaleEl.appendChild(colorSwatchEl);
+
+      this.mapScale.appendChild(singleScaleEl);
     }
   },
 };
