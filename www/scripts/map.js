@@ -4,7 +4,6 @@ import "leaflet/dist/leaflet.css";
 
 import state from "./state";
 import queryCaseData from "./queryCaseData";
-import countyBoundaries from "./countyBoundaries.json";
 
 const colors = [
   "#fff5f0",
@@ -74,10 +73,11 @@ export default {
   },
   async updateData() {
     state.pushLoad();
+    this.countyBoundaries = await import("./countyBoundaries.json");
     const cases = await queryCaseData(state.date);
 
     // Add the case data to the GeoJSON
-    for (const feature of countyBoundaries.features) {
+    for (const feature of this.countyBoundaries.features) {
       const fips = parseInt(feature.properties.GEO_ID.split("US")[1]);
       const { confirmed, deaths } = cases[fips] || {
         confirmed: 0,
@@ -91,7 +91,7 @@ export default {
 
     if (this.vectorGrid) this.map.removeLayer(this.vectorGrid);
     this.vectorGrid = L.vectorGrid
-      .slicer(countyBoundaries, {
+      .slicer(this.countyBoundaries, {
         interactive: true,
         vectorTileLayerStyles: {
           sliced: this.calculateStyle.bind(this),
@@ -115,7 +115,7 @@ export default {
   },
   updateMap() {
     state.pushLoad();
-    for (const feature of countyBoundaries.features) {
+    for (const feature of this.countyBoundaries.features) {
       this.vectorGrid.setFeatureStyle(
         feature.properties.FIPS,
         this.calculateStyle.bind(this)
