@@ -7,7 +7,11 @@ import map from "./map";
 
 export default {
   showDeaths: false,
+  loads: 0,
   init() {
+    this.loadingOverlayEl = document.getElementById("loaderOverlay");
+    this.popLoad();
+
     this.showCasesEl = document.getElementById("showCases");
     this.showDeathsEl = document.getElementById("showDeaths");
 
@@ -35,5 +39,17 @@ export default {
     });
 
     map.createMap();
+  },
+  pushLoad() {
+    this.loads += 1;
+    console.log(this.loads);
+    this.loadingOverlayEl.style.display = "flex";
+  },
+  popLoad() {
+    this.loads = Math.max(0, this.loads - 1);
+    console.log(this.loads);
+    if (this.loads == 0) {
+      this.loadingOverlayEl.style.display = "none";
+    }
   },
 };

@@ -61,6 +61,8 @@ export default {
       )
       .setMinZoom(5)
       .setView([37.09024, -95.712891], 5);
+
+    // Code to load open street maps from the first example at https://leafletjs.com/
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -71,6 +73,7 @@ export default {
     this.updateData();
   },
   async updateData() {
+    state.pushLoad();
     const cases = await queryCaseData(state.date);
 
     // Add the case data to the GeoJSON
@@ -108,8 +111,10 @@ export default {
           .openOn(this.map);
       })
       .addTo(this.map);
+    state.popLoad();
   },
   updateMap() {
+    state.pushLoad();
     for (const feature of countyBoundaries.features) {
       this.vectorGrid.setFeatureStyle(
         feature.properties.FIPS,
@@ -117,8 +122,10 @@ export default {
       );
     }
     this.updateScale();
+    state.popLoad();
   },
   updateScale() {
+    state.pushLoad();
     this.mapScale.innerHTML = "";
     this.thresholds = [...this.getThresholds(), 0].reverse();
 
@@ -138,5 +145,6 @@ export default {
 
       this.mapScale.appendChild(singleScaleEl);
     }
+    state.popLoad();
   },
 };
