@@ -2,8 +2,6 @@ import "leaflet";
 import "leaflet.vectorgrid";
 import "leaflet/dist/leaflet.css";
 
-import { DateTime } from "luxon";
-
 import state from "./state";
 import queryCaseData from "./queryCaseData";
 import countyBoundaries from "./countyBoundaries.json";
@@ -60,44 +58,46 @@ export default {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
 
-    (async () => {
-      const cases = await queryCaseData(DateTime.local().minus({ days: 1 }));
+    this.updateData();
+  },
+  async updateData() {
+    const cases = await queryCaseData(state.date);
 
-      // Add the case data to the GeoJSON
-      for (const feature of countyBoundaries.features) {
-        const fips = parseInt(feature.properties.GEO_ID.split("US")[1]);
-        const { confirmed, deaths } = cases[fips] || {
-          confirmed: 0,
-          deaths: 0,
-        };
+    // Add the case data to the GeoJSON
+    for (const feature of countyBoundaries.features) {
+      const fips = parseInt(feature.properties.GEO_ID.split("US")[1]);
+      const { confirmed, deaths } = cases[fips] || {
+        confirmed: 0,
+        deaths: 0,
+      };
 
-        feature.properties.CONFIRMED = confirmed;
-        feature.properties.DEATHS = deaths;
-        feature.properties.FIPS = fips;
-      }
+      feature.properties.CONFIRMED = confirmed;
+      feature.properties.DEATHS = deaths;
+      feature.properties.FIPS = fips;
+    }
 
-      this.vectorGrid = L.vectorGrid
-        .slicer(countyBoundaries, {
-          interactive: true,
-          vectorTileLayerStyles: {
-            sliced: this.calculateStyle.bind(this),
-          },
-          getFeatureId: (feat) => feat.properties.FIPS,
-        })
-        .on("click", (e) => {
-          L.popup()
-            .setContent(
-              `
-      <b>County: </b>${e.sourceTarget.properties.NAME}<br/>
-      <b>Confirmed Cases: </b>${e.sourceTarget.properties.CONFIRMED}<br/>
-      <b>Deaths: </b>${e.sourceTarget.properties.DEATHS}
-      `
-            )
-            .setLatLng(e.latlng)
-            .openOn(this.map);
-        })
-        .addTo(this.map);
-    })();
+    if (this.vectorGrid) this.map.removeLayer(this.vectorGrid);
+    this.vectorGrid = L.vectorGrid
+      .slicer(countyBoundaries, {
+        interactive: true,
+        vectorTileLayerStyles: {
+          sliced: this.calculateStyle.bind(this),
+        },
+        getFeatureId: (feat) => feat.properties.FIPS,
+      })
+      .on("click", (e) => {
+        L.popup()
+          .setContent(
+            `
+    <b>County: </b>${e.sourceTarget.properties.NAME}<br/>
+    <b>Confirmed Cases: </b>${e.sourceTarget.properties.CONFIRMED}<br/>
+    <b>Deaths: </b>${e.sourceTarget.properties.DEATHS}
+    `
+          )
+          .setLatLng(e.latlng)
+          .openOn(this.map);
+      })
+      .addTo(this.map);
   },
   updateMap() {
     for (const feature of countyBoundaries.features) {
